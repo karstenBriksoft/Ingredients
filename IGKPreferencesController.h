@@ -15,6 +15,7 @@
 	
 	IBOutlet NSView *generalView;
 	IBOutlet NSToolbarItem *generalToolbarItem;
+	IBOutlet NSButton *xcodeBrowserToggle;
 	
 	IBOutlet NSView *docsetsView;
 	IBOutlet NSToolbarItem *docsetsToolbarItem;
@@ -39,6 +40,9 @@
 - (IBAction)switchToGeneral:(id)sender;
 - (IBAction)switchToDocsets:(id)sender;
 - (IBAction)switchToUpdates:(id)sender;
+
+//General logic
+- (IBAction)useIngredientsAsXcodeDocumentationBrowser:(id)sender;
 
 //Docsets logic
 - (NSString *)selectedFilterDocsetPath;

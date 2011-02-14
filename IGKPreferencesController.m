@@ -22,6 +22,46 @@
 
 @synthesize startIntoDocsets;
 
+- (void)installXcodePlugin
+{
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSString *appSupportDirectory = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
+	NSString *xcodePluginsDirectory = [appSupportDirectory stringByAppendingPathComponent:@"Developer/Shared/Xcode/Plug-ins"];
+	NSString *ingredientsPluginPath = [xcodePluginsDirectory stringByAppendingPathComponent:@"Ingredients.xcplugin"];
+	NSString *ingredientsInternalPluginPath = [[NSBundle mainBundle] pathForResource:@"Ingredients" ofType:@"xcplugin"];
+	BOOL isPluginInstalled = [[fileManager destinationOfSymbolicLinkAtPath:ingredientsPluginPath error:NULL] isEqualToString:ingredientsInternalPluginPath];
+	
+	if (!isPluginInstalled)
+	{
+		NSError *error = nil;
+		[fileManager removeItemAtPath:ingredientsPluginPath error:NULL];
+		BOOL created = [fileManager createSymbolicLinkAtPath:ingredientsPluginPath withDestinationPath:ingredientsInternalPluginPath error:&error];
+		if (!created)
+		{
+			[xcodeBrowserToggle setEnabled:NO];
+			[xcodeBrowserToggle setToolTip:[NSString stringWithFormat:@"Could not create Xcode Plugin symlink. (%@)", [error localizedDescription]]];
+			return;
+		}
+	}
+	
+	BOOL isXcodeRunning = [[NSRunningApplication runningApplicationsWithBundleIdentifier:@"com.apple.Xcode"] count] > 0;
+	[xcodeBrowserToggle setEnabled:!isXcodeRunning];
+	if (isXcodeRunning)
+	{
+		[xcodeBrowserToggle setToolTip:@"Please quit and relaunch Xcode in order to enable this setting."];
+		
+		NSDistributedNotificationCenter *distributedCenter = [NSDistributedNotificationCenter defaultCenter];
+		[distributedCenter addObserver:self selector:@selector(ingredientsXcodePluginIsAvailable:) name:@"IngredientsXcodePluginIsAvailable" object:nil];
+		[distributedCenter postNotificationName:@"IsIngredientsXcodePluginAvailable" object:nil];
+	}
+}
+
+- (void)ingredientsXcodePluginIsAvailable:(NSNotification *)notification
+{
+	[xcodeBrowserToggle setEnabled:YES];
+	[xcodeBrowserToggle setToolTip:nil];
+}
+
 - (id)init
 {
 	if (self = [super initWithWindowNibName:@"IGKPreferences"])
@@ -36,6 +76,7 @@
 }
 - (void)windowDidLoad
 {
+	[self installXcodePlugin];
 	[self reloadTableViews];
 	[self switchToView:startIntoDocsets ? docsetsView : generalView item:generalToolbarItem animate:NO];
 
@@ -106,6 +147,14 @@
 	
 	[developerDirectoriesTableView reloadData];
 	[docsetsTableView reloadData];
+}
+
+#pragma mark General Logic
+
+- (IBAction)useIngredientsAsXcodeDocumentationBrowser:(id)sender
+{
+	[[NSUserDefaults standardUserDefaults] setBool:[sender state] forKey:@"IGKXcodeBrowser"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 #pragma mark Docsets Logic
