@@ -35,6 +35,7 @@
 	{
 		NSError *error = nil;
 		[fileManager removeItemAtPath:ingredientsPluginPath error:NULL];
+		[fileManager createDirectoryAtPath:xcodePluginsDirectory withIntermediateDirectories:YES attributes:nil error:NULL];
 		BOOL created = [fileManager createSymbolicLinkAtPath:ingredientsPluginPath withDestinationPath:ingredientsInternalPluginPath error:&error];
 		if (!created)
 		{
