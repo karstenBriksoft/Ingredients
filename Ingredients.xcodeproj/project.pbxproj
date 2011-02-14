@@ -183,6 +183,9 @@
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		DA7ED4B212820FC20028A84C /* IGKXCPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7ED4B112820FC20028A84C /* IGKXCPlugin.m */; };
+		DA7ED4BD128210180028A84C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		DA7ED4C91282105C0028A84C /* Ingredients.xcplugin in Resources */ = {isa = PBXBuildFile; fileRef = DA7ED49412820EE80028A84C /* Ingredients.xcplugin */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -192,6 +195,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 756F9D2E110BA72F00E6F291;
 			remoteInfo = IngredientsKit;
+		};
+		DA7ED4B7128210080028A84C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA7ED49312820EE80028A84C;
+			remoteInfo = "Xcode Plugin";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -402,6 +412,9 @@
 		77C8280C06725ACE000B614F /* Ingredients_AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ingredients_AppDelegate.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Ingredients-Info.plist */ = {isa = PBXFileReference; explicitFileType = text.plist.xml; fileEncoding = 4; path = "Ingredients-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Ingredients.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ingredients.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA7ED49412820EE80028A84C /* Ingredients.xcplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Ingredients.xcplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA7ED49512820EE80028A84C /* Xcode Plugin-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Xcode Plugin-Info.plist"; sourceTree = "<group>"; };
+		DA7ED4B112820FC20028A84C /* IGKXCPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGKXCPlugin.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -426,6 +439,14 @@
 				75B23F6A1140216200EC1D2B /* Security.framework in Frameworks */,
 				75943BA5114407C2004126E7 /* Sparkle.framework in Frameworks */,
 				75A9AAA911495F2300E539F2 /* QuartzCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA7ED49212820EE80028A84C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DA7ED4BD128210180028A84C /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,6 +556,7 @@
 			children = (
 				8D1107320486CEB800E47090 /* Ingredients.app */,
 				756F9D2F110BA72F00E6F291 /* IngredientsKit.framework */,
+				DA7ED49412820EE80028A84C /* Ingredients.xcplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -544,6 +566,7 @@
 			children = (
 				756F9D86110BB44F00E6F291 /* Ingredients */,
 				756F9D89110BB45600E6F291 /* Ingredients Kit */,
+				DA7ED4AE12820F740028A84C /* Xcode Plugin */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
@@ -774,6 +797,15 @@
 			name = Models;
 			sourceTree = "<group>";
 		};
+		DA7ED4AE12820F740028A84C /* Xcode Plugin */ = {
+			isa = PBXGroup;
+			children = (
+				DA7ED4B112820FC20028A84C /* IGKXCPlugin.m */,
+				DA7ED49512820EE80028A84C /* Xcode Plugin-Info.plist */,
+			);
+			name = "Xcode Plugin";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -859,12 +891,29 @@
 			);
 			dependencies = (
 				75B570631136A52A00EC5FE9 /* PBXTargetDependency */,
+				DA7ED4B8128210080028A84C /* PBXTargetDependency */,
 			);
 			name = Ingredients;
 			productInstallPath = "$(HOME)/Applications";
 			productName = Ingredients;
 			productReference = 8D1107320486CEB800E47090 /* Ingredients.app */;
 			productType = "com.apple.product-type.application";
+		};
+		DA7ED49312820EE80028A84C /* Xcode Plugin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA7ED49812820EE80028A84C /* Build configuration list for PBXNativeTarget "Xcode Plugin" */;
+			buildPhases = (
+				DA7ED49112820EE80028A84C /* Sources */,
+				DA7ED49212820EE80028A84C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Xcode Plugin";
+			productName = "Xcode Plugin";
+			productReference = DA7ED49412820EE80028A84C /* Ingredients.xcplugin */;
+			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
 
@@ -873,7 +922,6 @@
 			isa = PBXProject;
 			buildConfigurationList = 26FC0A880875C7B200E6366F /* Build configuration list for PBXProject "Ingredients" */;
 			compatibilityVersion = "Xcode 3.1";
-			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -887,6 +935,7 @@
 			targets = (
 				8D1107260486CEB800E47090 /* Ingredients */,
 				756F9D2E110BA72F00E6F291 /* IngredientsKit */,
+				DA7ED49312820EE80028A84C /* Xcode Plugin */,
 			);
 		};
 /* End PBXProject section */
@@ -969,6 +1018,7 @@
 				758108BB11B5C57E007C564C /* ToC_Overview_N.png in Resources */,
 				758108BC11B5C57E007C564C /* ToC_Properties_N.png in Resources */,
 				7515376D11CC64D5004529B2 /* openingpage.css in Resources */,
+				DA7ED4C91282105C0028A84C /* Ingredients.xcplugin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1045,6 +1095,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DA7ED49112820EE80028A84C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DA7ED4B212820FC20028A84C /* IGKXCPlugin.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1052,6 +1110,11 @@
 			isa = PBXTargetDependency;
 			target = 756F9D2E110BA72F00E6F291 /* IngredientsKit */;
 			targetProxy = 75B570621136A52A00EC5FE9 /* PBXContainerItemProxy */;
+		};
+		DA7ED4B8128210080028A84C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA7ED49312820EE80028A84C /* Xcode Plugin */;
+			targetProxy = DA7ED4B7128210080028A84C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1215,6 +1278,39 @@
 			};
 			name = Release;
 		};
+		DA7ED49612820EE80028A84C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = "Xcode Plugin-Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Developer/Shared/Xcode/Plug-ins";
+				PREBINDING = NO;
+				PRODUCT_NAME = Ingredients;
+				WRAPPER_EXTENSION = xcplugin;
+			};
+			name = Debug;
+		};
+		DA7ED49712820EE80028A84C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INFOPLIST_FILE = "Xcode Plugin-Info.plist";
+				INSTALL_PATH = "/Library/Application Support/Developer/Shared/Xcode/Plug-ins";
+				PREBINDING = NO;
+				PRODUCT_NAME = Ingredients;
+				WRAPPER_EXTENSION = xcplugin;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1241,6 +1337,15 @@
 			buildConfigurations = (
 				756F9D32110BA73000E6F291 /* Debug */,
 				756F9D33110BA73000E6F291 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DA7ED49812820EE80028A84C /* Build configuration list for PBXNativeTarget "Xcode Plugin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA7ED49612820EE80028A84C /* Debug */,
+				DA7ED49712820EE80028A84C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
