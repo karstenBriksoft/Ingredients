@@ -14,7 +14,7 @@
 
 @implementation Ingredients
 
-static IMP IMP_XCDocSetAccessModule_searchForAPIString_ = NULL;
+static IMP IMP_IGKXCPlugin_SwizzledMethod = NULL;
 
 + (void) searchForAPIString:(NSString *)searchString
 {
@@ -28,8 +28,13 @@ static IMP IMP_XCDocSetAccessModule_searchForAPIString_ = NULL;
 	}
 	else
 	{
-		IMP_XCDocSetAccessModule_searchForAPIString_(self, _cmd, searchString);
+		IMP_IGKXCPlugin_SwizzledMethod(self, _cmd, searchString);
 	}
+}
+
++ (void)generateHTMLForSymbol:(id)symbol fromQueryDictionary:(NSDictionary*)queryDict inExpressionSource:(id)source
+{
+	[self searchForAPIString:[symbol performSelector:@selector(name)]];
 }
 
 + (void) postPluginAvailableNotification
@@ -37,21 +42,45 @@ static IMP IMP_XCDocSetAccessModule_searchForAPIString_ = NULL;
 	[[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"IngredientsXcodePluginIsAvailable" object:nil];
 }
 
++ (BOOL)swizzleSelectorNamed:(NSString*)aSelectorString inClassNamed:(NSString*)aClassName
+{
+	Class targetClass = NSClassFromString(aClassName);
+	
+	if (targetClass == nil) return NO;
+	
+	SEL selector = NSSelectorFromString(aSelectorString);
+	
+	Method myImplementation = class_getClassMethod(self, selector);
+	Method xcodeImplementation = class_getInstanceMethod(targetClass, selector);
+	
+	IMP_IGKXCPlugin_SwizzledMethod = method_getImplementation(xcodeImplementation);
+	method_setImplementation(xcodeImplementation, method_getImplementation(myImplementation));
+	
+	return xcodeImplementation != nil;	
+}
+
++ (BOOL)swizzleXcode3
+{
+	return [self swizzleSelectorNamed:@"searchForAPIString:" inClassNamed: @"XCDocSetAccessModule"];
+}
+
++ (BOOL)swizzleXcode4
+{
+	return [self swizzleSelectorNamed:@"generateHTMLForSymbol:fromQueryDictionary:inExpressionSource:" inClassNamed: @"IDEQuickHelpController"];
+}
+
 + (void) pluginDidLoad:(NSBundle *)plugin
 {
-	if (![[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.apple.Xcode"])
+	NSArray* xcodeBundleIDs = [NSArray arrayWithObjects:@"com.apple.Xcode", @"com.apple.dt.Xcode",nil];
+	if (![xcodeBundleIDs containsObject:[[NSBundle mainBundle] bundleIdentifier]])
 		return;
-	
-	Class XCDocSetAccessModule = NSClassFromString(@"XCDocSetAccessModule");
-	SEL searchForAPIString_ = @selector(searchForAPIString:);
-	Method Ingredients_searchForAPIString_ = class_getClassMethod(self, searchForAPIString_);
-	Method XCDocSetAccessModule_searchForAPIString_ = class_getInstanceMethod(XCDocSetAccessModule, searchForAPIString_);
-	IMP_XCDocSetAccessModule_searchForAPIString_ = method_getImplementation(XCDocSetAccessModule_searchForAPIString_);
-	method_setImplementation(XCDocSetAccessModule_searchForAPIString_, method_getImplementation(Ingredients_searchForAPIString_));
-	
+
 	NSString *pluginName = [[[plugin bundlePath] lastPathComponent] stringByDeletingPathExtension];
 	NSString *version = [plugin objectForInfoDictionaryKey:@"CFBundleVersion"];
-	if (XCDocSetAccessModule_searchForAPIString_)
+
+	BOOL couldSwizzle = [self swizzleXcode3] || [self swizzleXcode4];
+	
+	if (couldSwizzle)
 	{
 		[[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(postPluginAvailableNotification) name:@"IsIngredientsXcodePluginAvailable" object:nil];
 		[self postPluginAvailableNotification];
